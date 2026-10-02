@@ -1,52 +1,200 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brownana Member</title>
-</head><title>Brownana Member</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brownana Member</title>
 
-    </head>
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-</script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f3ef;
+      margin: 0;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 450px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #5a321f;
+    }
+
+    h2 {
+      text-align: center;
+      color: #7a5138;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      background: #7a5138;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5a321f;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>Brownana Member</h1>
+  <div class="container">
 
-<h2>สมัครสมาชิก</h2>
+    <h1>Brownana Member</h1>
 
-<form>
-    <label>ชื่อ:</label><br>
-    <input type="text" placeholder="กรอกชื่อ"><br><br>
+    <h2>สมัครสมาชิก</h2>
 
-    <label>Email:</label><br>
-    <input type="email" placeholder="กรอก Email"><br><br>
+    <form id="registerForm">
 
-    <label>รหัสผ่าน:</label><br>
-    <input type="password" placeholder="กรอกรหัสผ่าน"><br><br>
+      <label for="name">ชื่อ:</label>
+      <input
+        type="text"
+        id="name"
+        placeholder="กรอกชื่อ"
+        required
+      >
 
-    <button type="submit">สมัครสมาชิก</button>
-</form>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="กรอก Email"
+        required
+      >
 
-<hr>
+      <label for="password">รหัสผ่าน:</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="กรอกรหัสผ่าน"
+        minlength="6"
+        required
+      >
 
-<h2>เข้าสู่ระบบ</h2>
+      <button type="submit">
+        สมัครสมาชิก
+      </button>
 
-<form>
-    <label>Email:</label><br>
-    <input type="email"><br><br>
+    </form>
 
-    <label>รหัสผ่าน:</label><br>
-    <input type="password"><br><br>
+    <div id="message"></div>
 
-    <button type="submit">เข้าสู่ระบบ</button>
-</form>
+  </div>
+
+  <script>
+    // =========================
+    // Supabase
+    // =========================
+
+    const SUPABASE_URL =
+      "https://xtbsqnqxijgfgblavzny.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_Vr1Uqr_ulWD0l3tdqmUeYg_coxHRAxC";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+
+    // =========================
+    // สมัครสมาชิก
+    // =========================
+
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const name =
+          document.getElementById("name").value.trim();
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        const message =
+          document.getElementById("message");
+
+        message.textContent = "กำลังสมัครสมาชิก...";
+
+        const { data, error } =
+          await supabaseClient.auth.signUp({
+
+            email: email,
+
+            password: password,
+
+            options: {
+              data: {
+                name: name
+              }
+            }
+
+          });
+
+
+        if (error) {
+
+          message.textContent =
+            "สมัครสมาชิกไม่สำเร็จ: " + error.message;
+
+          return;
+        }
+
+
+        message.textContent =
+          "สมัครสมาชิกสำเร็จแล้ว 🎉";
+
+        document
+          .getElementById("registerForm")
+          .reset();
+
+      });
+  </script>
 
 </body>
 </html>
